@@ -1,0 +1,18 @@
+import { Router } from "express"
+import { protect } from "../middleware/authMiddleware.js";
+import { getDashboard } from "../controller/dashboardController.js";
+
+
+const dashboardRouter = Router();
+
+
+
+dashboardRouter.get('/', protect, getDashboard)
+
+
+
+
+
+
+
+export default dashboardRouter;
