@@ -2,7 +2,7 @@ import { cron, Inngest } from "inngest";
 import attendanceModel from "../models/Attendance.js";
 import employeeModel from "../models/Employee.js";
 import leaveModel from "../models/LeaveApplication.js";
-import sendEmail from "../config/nodeMailer.js";
+import sendEmail from "../config/nodemailer.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "fullstack--ems" });
