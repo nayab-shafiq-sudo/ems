@@ -1,4 +1,4 @@
-import { DEPARTMENTS } from "../constants/Departments.js";
+import { DEPARTMENTS } from "../constants/departments.js";
 import attendanceModel from "../models/Attendance.js";
 import employeeModel from "../models/Employee.js";
 import leaveModel from "../models/LeaveApplication.js";
