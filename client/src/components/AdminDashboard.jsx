@@ -5,7 +5,7 @@ const AdminDashboard = ({ data }) => {
     const stats = [
         {icon: UserIcon, value: data.totalEmployees, label: "Total Employess", description: "Active work force"},
         {icon: Building2Icon, value: data.totalDepartments, label: "Department", description: "Organization units"},
-        {icon: CalendarIcon, value: data.todayAttendance, label: "Today's Attendence", description: "Checked in today"},
+        {icon: CalendarIcon, value: data.totalAttendance, label: "Today's Attendance", description: "Checked in today"},
         {icon: FileTextIcon, value: data.pendingLeaves, label: "Pending Leaves", description: "Awaiting approval"},
     ]
 

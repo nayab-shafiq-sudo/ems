@@ -1,5 +1,7 @@
 import { Loader2, Plus, X } from 'lucide-react'
 import React, { useState } from 'react'
+import api from '../../api/Axios'
+import toast from 'react-hot-toast'
 
 const GenratePayslipForm = ({employees, onSuccess}) => {
     const [isOpen, setisOpen] = useState(false)
@@ -12,6 +14,18 @@ const GenratePayslipForm = ({employees, onSuccess}) => {
     )
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setloading(true)
+        const formData = new FormData(e.currentTarget)
+        const data = Object.fromEntries(formData.entries())
+        try {
+            await api.post('/payslips', data)
+            setisOpen(false)
+            onSuccess()
+        } catch (error) {
+            toast.error(error?.response?.data?.error || error?.message)
+        } finally {
+            setloading(false)
+        }
     }
   return (
     <div className='fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
@@ -46,7 +60,7 @@ const GenratePayslipForm = ({employees, onSuccess}) => {
                     </label>
                     <select name="month" >
                         {Array.from({length: 12},(_, i) => i+1).map((m)=>(
-                            <option value="m" key={m}>{m}</option>
+                            <option value={m} key={m}>{m}</option>
                         ))}
                     </select>
                 </div>
@@ -72,13 +86,13 @@ const GenratePayslipForm = ({employees, onSuccess}) => {
                     <label className='block text-sm font-medium text-slate-700 mb-2'>
                         Allowance
                     </label>
-                    <input type="number" defaultValue="0" name="allowance" />
+                    <input type="number" defaultValue="0" name="allowances" />
                 </div>
                 <div>
                 <label className='block text-sm font-medium text-slate-700 mb-2'>
                     Deduction
                 </label>
-                <input type="number" defaultValue="0" name="deduction" />
+                <input type="number" defaultValue="0" name="deductions" />
                 </div>
             </div>
 

@@ -67,7 +67,7 @@ export const changePassword = async (req, res) => {
         // HASHING PASSWORD
         const hashed = await bcrypt.hash(newPassword, 10)
         // UPDATING USER PASSWORD
-        await userModel.findByIdAndUpdate(session.userModel, {password:hashed})
+        await userModel.findByIdAndUpdate(session.userId, {password:hashed})
         
         return res.json({success: true})
     } catch (error) {

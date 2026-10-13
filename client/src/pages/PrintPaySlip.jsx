@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { dummyPayslipData } from '../assets/assets'
 import Loading from '../components/Loading'
 import { format } from 'date-fns'
+import api from '../api/Axios'
 
 const PrintPaySlip = () => {
   const {id} = useParams()
@@ -10,10 +10,7 @@ const PrintPaySlip = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(()=>{
-    setPayslip(dummyPayslipData.find((slip)=> slip._id === id))
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000);
+    api.get(`/payslips/${id}`).then((res)=> setPayslip(res.data)).catch(console.error).finally(()=> setLoading(false))
   },[id])
 
   if (loading) return <Loading/>
@@ -48,7 +45,7 @@ const PrintPaySlip = () => {
       <div className='rounded-xl border border-slate-200 overflow-hidden mb-8'>
         <table className='w-full text-sm'>
           <thead>
-            <tr className='bg-slate-50'>
+            <tr className='bg-slate-100'>
               <th className='text-left py-3 px-4 text-xs text-slate-500 uppercase tracking-wider'>
                 Description
               </th>
@@ -76,9 +73,9 @@ const PrintPaySlip = () => {
                 ${payslip.deductions?.toLocaleString()}
               </td>
             </tr>
-            <tr className='border-t border-slate-100'>
+            <tr className='border-t border-slate-100 bg-slate-50 font-bold'>
               <td className='py-3 px-4 text-slate-700'>Net Salary</td>
-              <td className='text-right py-3 px-4 text-slate-900 font-medium'>
+              <td className='text-right py-3 px-4 text-slate-900 '>
                 ${payslip.netSalary?.toLocaleString()}
               </td>
             </tr>

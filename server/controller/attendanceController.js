@@ -82,7 +82,7 @@ export const getAttendance = async (req, res) => {
         const history = await attendanceModel.find({employeeId: employee._id}).sort({date: -1}).limit(limit)
 
         return res.json({
-            date: history,
+            data: history,
             employee: {isDeleted: employee.isDeleted}
         })
     } catch (error) {
