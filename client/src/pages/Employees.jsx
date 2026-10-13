@@ -3,6 +3,7 @@ import { Plus, Search, X } from 'lucide-react'
 import { dummyEmployeeData, DEPARTMENTS } from '../assets/assets'
 import EmployeeCard from '../components/EmployeeCard'
 import EmployeeForm from '../components/EmployeeForm'
+import api from '../api/Axios'
 
 const Employees = () => {
 
@@ -14,12 +15,15 @@ const Employees = () => {
   const [showCreateModal, setShowCreateModal] = useState(false)
 
   const fetchEmployees = useCallback(async ()=>{
-    setLoading(true)
-    setEmployees(dummyEmployeeData.filter((emp)=>(selectDept ? emp.department === selectDept : emp)))
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    try {
+      const url = selectDept ? `/employees?department=${selectDept}` : "/employees";
+      const res = await api.get(url);
+      setEmployees(res.data)
+    } catch (error) {
+      console.log("Failed to fetch employees")
+    } finally {
+      setLoading(false)
+    }
   },[selectDept])
 
   const filltered = employees.filter((emp)=> `${emp.firstName} ${emp.lastName} ${emp.position}`.toLowerCase().includes(search.toLocaleLowerCase()))

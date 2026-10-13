@@ -69,7 +69,7 @@ export const getLeaves = async (req, res) => {
         } else {
             const employee = await employeeModel.findOne({userId: session.userId}).lean()
             if (!employee) return res.status(404).json({error: "Employee not found"})
-            const leaves = (await leaveModel.find({employeeId: employee._id})).sort({createdAt: -1})
+            const leaves = await leaveModel.find({employeeId: employee._id}).sort({createdAt: -1})
             return res.json({data: leaves, employee: {...employee, id: employee._id.toString()}})
         } 
         

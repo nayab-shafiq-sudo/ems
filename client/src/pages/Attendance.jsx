@@ -4,6 +4,8 @@ import Loading from "../components/Loading"
 import Button from "../components/attendance/Button"
 import AttendanceStats from "../components/attendance/AttendanceStats"
 import AttendanceHistory from "../components/attendance/AttendanceHistory"
+import api from "../api/Axios"
+import toast from "react-hot-toast"
 
 const Attendance = () => {
 
@@ -12,11 +14,16 @@ const Attendance = () => {
   const [isDeleted, setIsDeleted] = useState(false)
 
   const fetchData = useCallback(async()=>{
-    setHistory(dummyAttendanceData)
-
-    setTimeout(() => {
+    try {
+      const res = await api.get('/attendance')
+      const json = res.data;
+      setHistory(json.data || []);
+      if (json.employee?.isDeleted) setIsDeleted(true)
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error?.message)
+    } finally {
       setLoading(false)
-    }, 1000);
+    }
   },[])
 
   useEffect(()=>{
@@ -27,7 +34,7 @@ const Attendance = () => {
 
   const today = new Date()
   today.setHours(0,0,0,0)
-  const todayRecord = history.find((r)=>new Date(r.Date).toDateString() === today.toDateString())
+  const todayRecord = history.find((r)=>new Date(r.date).toDateString() === today.toDateString())
 
   return (
     <div className="animate-fade-in">

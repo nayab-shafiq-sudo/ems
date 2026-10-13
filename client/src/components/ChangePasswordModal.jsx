@@ -1,5 +1,6 @@
 import { Loader2Icon, LockIcon, X } from 'lucide-react'
 import React, { useState } from 'react'
+import api from '../api/Axios'
 
 const ChangePasswordModal = ({open, onClose}) => {
     const [loading, setloading] = useState(false)
@@ -7,7 +8,22 @@ const ChangePasswordModal = ({open, onClose}) => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      setloading(true)
+      setmessage({type: "", text: ""})
+      const formData = new FormData(e.currentTarget)
+      const currentPassword = formData.get("currentPassword")
+      const newPassword = formData.get("newPassword")
 
+      try {
+        const {data} = await api.post('/auth/change-password', {currentPassword, newPassword})
+        if (!data.success) throw new Error(data.error || "Failed")
+          setmessage({type: "success", text: "Password Updated Succesfully!"})
+          e.target.reset()
+      } catch (error) {
+        setmessage({type: "error", text: error.message})
+      } finally {
+        setloading(false)
+      }
     }
 
     if (!open) return null
@@ -23,18 +39,18 @@ const ChangePasswordModal = ({open, onClose}) => {
         </div>
         {/** FORM */}
         <form onSubmit={handleSubmit} className='space-y-5 p-6'>
+          
           {message.text && (
-            <div className={`p-3 rounded-xl text-sm flex items-start gap-3 ${message.text === "SUCCESS" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>
-              <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${message.type === "SUCCESS" ? "bg-emerald-500" : "bg-rose-500"}`}>
-                {message.text}
-              </div>
+            <div className={`p-3 rounded-xl text-sm flex items-start gap-3 ${message.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>
+              <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${message.type === "success" ? "bg-emerald-500" : "bg-rose-500"}`}/>
+              {message.text}
             </div>
           )}
           <div>
             <label className='block text-sm font-medium text-slate-700 mb-2'>
               Current Password
             </label>
-            <input type="password" name='changePassword' required />
+            <input type="password" name='currentPassword' required />
           </div>
           <div>
             <label className='block text-sm font-medium text-slate-700 mb-2'>
